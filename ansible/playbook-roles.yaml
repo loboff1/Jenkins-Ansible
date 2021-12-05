@@ -1,0 +1,9 @@
+---
+ - name: INSTALL APACHE2 PHP
+   hosts: all
+   become: true
+   gather_facts: true
+   
+   roles:
+     - install_apache2
+

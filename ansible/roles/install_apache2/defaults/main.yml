@@ -1,0 +1,8 @@
+---
+# vars file for install_apache2
+
+user: "andrey"
+host: "website"
+config: "mywebsite.conf"
+port: "80"
+disable_default: true
