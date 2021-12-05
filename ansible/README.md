@@ -9,13 +9,13 @@ Role Variables
 
 The folder /defaults contains variables for setting up configuration of your PHP website
 
-app_user: A remote non-root user for the Ansible host that will be configured as the owner of the application files.
+auser: A remote non-root user for the Ansible host that will be configured as the owner of the application files.
 
-http_host: your domain name.
+host: your domain name.
 
-http_conf: the name of the configuration file to be created in Apache.
+conf: the name of the configuration file to be created in Apache.
 
-http_port: The HTTP port for this virtual host, 80 is the default.
+port: The HTTP port for this virtual host, 80 is the default.
 
 disable_default: Whether to disable the default Apache website.
 
