@@ -2,8 +2,14 @@
 # tasks file for install_apache2
 
 - name: INSTALL APACHE2 AND PHP-MOD
-  apt: name={{ item }} update_cache=yes state=latest
-  loop: [ 'apache2', 'libapache2-mod-php' ]  
+  apt: 
+    name: "{{ packages }}" 
+    update_cache: yes 
+    state: latest
+  vars:
+    packages:
+    - apache2
+    - libapache2-mod-php
          
 - name: CREATE NEW DIR FOR WEBSITE 
   file:
@@ -24,12 +30,14 @@
     dest: "/var/www/{{ host }}/phpinfo.php"
     owner: "{{ user }}"
     mode: '0775'
-         
-- name: ENABLE NEW WEBSITE
-  shell: /usr/sbin/a2ensite "{{ config }}"
-  notify: RELOAD APACHE2
 
-- name: DISABLE DEFAULT CONFIG VIRTUALHOST APACHE2 
-  shell: /usr/sbin/a2dissite 000-default.conf
+- block:    
+     
+    - name: ENABLE NEW WEBSITE
+      shell: /usr/sbin/a2ensite "{{ config }}"
+
+    - name: DISABLE DEFAULT CONFIG VIRTUALHOST APACHE2 
+      shell: /usr/sbin/a2dissite 000-default.conf
+      notify: RELOAD APACHE2
+      
   when: disable_default
-  notify: RELOAD APACHE2
