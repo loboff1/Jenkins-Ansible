@@ -1,0 +1,43 @@
+---
+# tasks file for install_apache2
+
+- name: INSTALL APACHE2 AND PHP-MOD
+  apt: 
+    name: "{{ packages }}" 
+    update_cache: yes 
+    state: latest
+  vars:
+    packages:
+    - apache2
+    - libapache2-mod-php
+         
+- name: CREATE NEW DIR FOR WEBSITE 
+  file:
+    path: "/var/www/{{ host }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: '0775'
+        
+- name: COPY NEW CONFIG FOR VIRTUALHOST APACHE2
+  template:
+    src: "files/website.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ config }}"
+  notify: RELOAD APACHE2
+      
+- name: COPY DEMO PHP PAGE
+  template:
+    src: "files/phpinfo.php.j2"
+    dest: "/var/www/{{ host }}/phpinfo.php"
+    owner: "{{ user }}"
+    mode: '0775'
+
+- block:    
+     
+    - name: ENABLE NEW WEBSITE
+      shell: /usr/sbin/a2ensite "{{ config }}"
+
+    - name: DISABLE DEFAULT CONFIG VIRTUALHOST APACHE2 
+      shell: /usr/sbin/a2dissite 000-default.conf
+      notify: RELOAD APACHE2
+      
+  when: disable_default
